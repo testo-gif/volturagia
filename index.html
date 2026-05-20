@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>VolturaGia — Studio Commercialista a Casalecchio di Reno</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<style>
+:root{--navy:#1a2744;--gold:#c9a84c;--cream:#faf8f3;--navy2:#2a3f6e;--sh:0 4px 24px rgba(26,39,68,.12)}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{font-family:'Inter',sans-serif;color:#222;background:#fff;overflow-x:hidden}
+a{text-decoration:none;color:inherit}
+
+/* BANNER */
+#banner{position:fixed;top:0;left:0;width:100%;background:#000;color:#fff;z-index:9999;padding:10px 24px;display:flex;align-items:center;justify-content:space-between;gap:12px;font-size:.88rem}
+#banner .b-text{flex:1}
+.b-btn{background:#ff4d00;color:#fff;padding:9px 20px;border-radius:6px;font-weight:700;white-space:nowrap;font-size:.84rem}
+.b-btn:hover{background:#e04400}
+@media(max-width:600px){#banner .b-text{display:none}#banner::before{content:"Vuoi un sito così? €99";font-size:.85rem;flex:1}}
+
+/* NAV */
+nav{position:fixed;top:40px;left:0;width:100%;z-index:1000;padding:14px 40px;display:flex;align-items:center;justify-content:space-between;transition:background .3s,box-shadow .3s}
+nav.scrolled{background:var(--navy);box-shadow:0 2px 20px rgba(0,0,0,.3)}
+.nav-logo{font-family:'Cormorant Garamond',serif;font-size:1.35rem;color:#fff;font-weight:700;letter-spacing:.5px}
+.nav-links{display:flex;gap:28px}
+.nav-links a{color:rgba(255,255,255,.85);font-size:.88rem;font-weight:500;transition:color .2s}
+.nav-links a:hover{color:var(--gold)}
+@media(max-width:768px){nav{padding:12px 20px}.nav-links{display:none}}
+
+/* HERO */
+#hero{height:100vh;min-height:580px;position:relative;background:var(--navy);display:flex;align-items:center;justify-content:center;padding:0 24px;text-align:center;overflow:hidden}
+.hero-bg{position:absolute;inset:0;background-image:url('https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=1200&auto=format&fit=crop');background-size:cover;background-position:center;opacity:.22}
+.hero-content{position:relative;z-index:1;max-width:820px;padding:0 16px}
+.hero-badge{display:inline-block;background:var(--gold);color:var(--navy);font-size:.75rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;padding:6px 18px;border-radius:4px;margin-bottom:22px}
+.hero-content h1{font-family:'Cormorant Garamond',serif;font-size:clamp(2rem,5vw,3.6rem);color:#fff;font-weight:700;line-height:1.15;margin-bottom:16px}
+.hero-rating{color:var(--gold);font-size:1.05rem;margin-bottom:10px;letter-spacing:.5px}
+.hero-address{color:rgba(255,255,255,.68);font-size:.92rem;margin-bottom:34px}
+.hero-cta{display:inline-block;background:var(--gold);color:var(--navy);padding:14px 38px;border-radius:8px;font-weight:700;font-size:.98rem;transition:transform .2s,box-shadow .2s}
+.hero-cta:hover{transform:translateY(-2px);box-shadow:0 8px 28px rgba(201,168,76,.4)}
+
+/* ABOUT */
+#about{background:var(--cream);padding:100px 40px}
+.about-in{max-width:1080px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:64px;align-items:center}
+.about-text h2{font-family:'Cormorant Garamond',serif;font-size:2.4rem;color:var(--navy);margin-bottom:20px}
+.about-text p{line-height:1.82;color:#444;font-size:.98rem}
+.about-stats{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:36px}
+.stat-box{background:#fff;padding:20px 16px;border-radius:12px;text-align:center;box-shadow:var(--sh);border-top:3px solid var(--gold)}
+.stat-val{font-family:'Cormorant Garamond',serif;font-size:2rem;color:var(--navy);font-weight:700;line-height:1}
+.stat-label{font-size:.75rem;color:#777;text-transform:uppercase;letter-spacing:.5px;margin-top:4px}
+.about-photo{border-radius:16px;overflow:hidden;box-shadow:var(--sh)}
+.about-photo img{width:100%;height:420px;object-fit:cover;display:block}
+@media(max-width:768px){#about{padding:60px 20px}.about-in{grid-template-columns:1fr;gap:36px}.about-photo{order:-1}.about-photo img{height:280px}}
+
+/* SERVIZI */
+#servizi{padding:100px 40px;background:#fff}
+.sec-hdr{text-align:center;margin-bottom:56px}
+.sec-hdr h2{font-family:'Cormorant Garamond',serif;font-size:2.4rem;color:var(--navy)}
+.sec-hdr p{color:#777;margin-top:10px;font-size:.95rem}
+.svc-grid{max-width:1080px;margin:0 auto;display:grid;grid-template-columns:repeat(3,1fr);gap:26px}
+.service-card{background:#fff;border:1px solid #e8e4dc;border-radius:12px;padding:30px 26px;transition:transform .2s,box-shadow .2s;position:relative;overflow:hidden}
+.service-card::after{content:'';position:absolute;bottom:0;left:0;width:100%;height:3px;background:var(--gold);transform:scaleX(0);transition:transform .3s}
+.service-card:hover{transform:translateY(-4px);box-shadow:var(--sh)}
+.service-card:hover::after{transform:scaleX(1)}
+.service-icon{font-size:2rem;margin-bottom:14px}
+.service-card h3{font-family:'Cormorant Garamond',serif;font-size:1.25rem;color:var(--navy);margin-bottom:10px}
+.service-card p{color:#666;font-size:.88rem;line-height:1.65}
+@media(max-width:768px){#servizi{padding:60px 20px}.svc-grid{grid-template-columns:1fr}}
+
+/* GALLERY */
+#gallery{display:grid;grid-template-columns:repeat(4,1fr);height:260px}
+.grid-photo{background-size:cover;background-position:center;transition:transform .4s;overflow:hidden}
+.grid-photo:hover{transform:scale(1.04)}
+@media(max-width:600px){#gallery{grid-template-columns:repeat(2,1fr);height:340px}}
+
+/* RECENSIONI */
+#recensioni{background:var(--cream);padding:100px 40px}
+.rev-in{max-width:1080px;margin:0 auto}
+.rating-summary{display:flex;gap:36px;align-items:flex-start;background:#fff;border-radius:16px;padding:30px;margin-bottom:48px;box-shadow:var(--sh);flex-wrap:wrap}
+.rating-big{text-align:center;min-width:110px}
+.big-num{font-family:'Cormorant Garamond',serif;font-size:3.8rem;color:var(--navy);font-weight:700;line-height:1}
+.big-stars{color:var(--gold);font-size:1.35rem;margin-top:4px}
+.big-count{color:#999;font-size:.82rem;margin-top:4px}
+.rating-bars{flex:1;min-width:180px}
+.dist-row{display:flex;align-items:center;gap:10px;margin-bottom:7px}
+.dist-lbl{width:22px;text-align:right;font-size:.82rem;color:#555;flex-shrink:0}
+.dist-bar{flex:1;height:8px;background:#e8e4dc;border-radius:4px;overflow:hidden}
+.dist-fill{height:100%;background:var(--gold);border-radius:4px}
+.dist-pct{width:34px;font-size:.78rem;color:#777}
+.rating-tags{display:flex;flex-wrap:wrap;gap:8px;align-self:center}
+.tag-chip{background:var(--navy);color:#fff;padding:5px 13px;border-radius:20px;font-size:.78rem}
+.rev-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:22px;margin-bottom:32px}
+.review-card{background:#fff;border-radius:12px;padding:22px;box-shadow:var(--sh)}
+.rev-header{display:flex;align-items:center;gap:12px;margin-bottom:12px}
+.review-avatar{width:42px;height:42px;border-radius:50%;object-fit:cover;flex-shrink:0}
+.review-avatar-init{width:42px;height:42px;border-radius:50%;background:var(--navy);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:1.05rem;flex-shrink:0}
+.rev-meta{flex:1}
+.rev-meta strong{display:block;font-size:.92rem}
+.rev-stars{color:var(--gold);font-size:.88rem}
+.g-logo{width:26px;height:26px;border-radius:50%;background:#4285F4;color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:.8rem;flex-shrink:0}
+.rev-text{font-size:.88rem;color:#444;line-height:1.68}
+.rev-date{font-size:.77rem;color:#aaa;margin-top:8px;display:block}
+.gmaps-btn{display:inline-flex;align-items:center;gap:8px;background:var(--navy);color:#fff;padding:12px 26px;border-radius:8px;font-weight:600;font-size:.92rem;transition:background .2s;margin-top:4px}
+.gmaps-btn:hover{background:var(--navy2)}
+.no-rev{color:#999;text-align:center;padding:24px;font-size:.95rem}
+@media(max-width:768px){#recensioni{padding:60px 20px}.rating-summary{flex-direction:column;gap:20px}}
+
+/* FAQ */
+#faq{padding:100px 40px;background:#fff}
+.faq-in{max-width:740px;margin:0 auto}
+.faq-item{border-bottom:1px solid #e8e4dc;overflow:hidden}
+.faq-q{width:100%;display:flex;justify-content:space-between;align-items:center;padding:20px 0;background:none;border:none;cursor:pointer;font-size:.97rem;color:var(--navy);font-weight:600;font-family:'Inter',sans-serif;text-align:left;gap:16px}
+.faq-icon{font-size:1.3rem;color:var(--gold);transition:transform .3s;flex-shrink:0}
+.faq-a{max-height:0;overflow:hidden;transition:max-height .4s ease}
+.faq-a.open{max-height:320px}
+.faq-a p{padding:0 0 20px;color:#555;line-height:1.75;font-size:.93rem}
+
+/* MAPPA */
+#mappa{padding:0}
+#map{height:420px;width:100%;z-index:1}
+
+/* CONTATTI */
+#contatti{background:var(--navy);padding:100px 40px;color:#fff}
+.cont-in{max-width:1080px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:start}
+.cont-left h2{font-family:'Cormorant Garamond',serif;font-size:2.4rem;color:#fff;margin-bottom:32px}
+.contact-item{display:flex;align-items:flex-start;gap:16px;margin-bottom:24px}
+.ci{font-size:1.3rem;flex-shrink:0;margin-top:2px}
+.contact-item strong{display:block;color:var(--gold);font-size:.75rem;text-transform:uppercase;letter-spacing:.6px;margin-bottom:4px}
+.contact-item a{color:#fff;font-size:.98rem}
+.contact-item span{color:rgba(255,255,255,.78);font-size:.95rem}
+.badges-row{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
+.badge{background:rgba(201,168,76,.18);color:var(--gold);border:1px solid rgba(201,168,76,.5);padding:5px 14px;border-radius:20px;font-size:.78rem}
+.hours-table{width:100%;border-collapse:collapse;margin-top:20px}
+.hours-table th{color:var(--gold);font-size:.75rem;text-transform:uppercase;letter-spacing:.5px;padding:8px 12px;text-align:left;border-bottom:1px solid rgba(255,255,255,.1)}
+.hours-table td{padding:9px 12px;color:rgba(255,255,255,.78);font-size:.88rem;border-bottom:1px solid rgba(255,255,255,.06)}
+.hours-table .day-col{font-weight:500;color:#fff}
+.today-row td{color:var(--gold)!important;font-weight:600}
+@media(max-width:768px){#contatti{padding:60px 20px}.cont-in{grid-template-columns:1fr;gap:40px}}
+
+/* FOOTER */
+footer{background:#0c1829;padding:28px 40px;color:rgba(255,255,255,.45);font-size:.82rem}
+.foot-in{max-width:1080px;margin:0 auto;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px}
+.priv-link{color:var(--gold);cursor:pointer;text-decoration:underline;background:none;border:none;font-size:.82rem;font-family:inherit}
+
+/* MODAL */
+.modal-ov{position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:10000;display:none;align-items:center;justify-content:center;padding:20px}
+.modal-ov.open{display:flex}
+.modal-box{background:#fff;border-radius:16px;padding:40px;max-width:580px;max-height:80vh;overflow-y:auto;position:relative;width:100%}
+.modal-box h3{color:var(--navy);margin-bottom:16px;font-family:'Cormorant Garamond',serif;font-size:1.7rem}
+.modal-box p{color:#555;line-height:1.72;font-size:.88rem;margin-bottom:10px}
+.modal-close{position:absolute;top:14px;right:18px;font-size:1.4rem;cursor:pointer;color:#999;background:none;border:none}
+
+/* STICKY */
+.sticky-btn{position:fixed;bottom:26px;right:26px;z-index:5000;padding:13px 22px;border-radius:50px;font-weight:700;font-size:.92rem;color:#fff;box-shadow:0 4px 20px rgba(0,0,0,.3);transition:transform .2s;display:flex;align-items:center;gap:8px}
+.sticky-btn:hover{transform:translateY(-3px)}
+.sticky-call{background:#1a5c2a}
+.sticky-wa{background:#25D366}
+</style>
+</head>
+<body>
+
+<!-- 1. BANNER -->
+<div id="banner">
+  <span class="b-text">Ti piace questo sito? Il tuo potrebbe essere identico — online in 5 giorni per €99</span>
+  <a href="https://buy.stripe.com/8x25kC7mo39M0bN1Mv1B601" class="b-btn" target="_blank">Inizia ora →</a>
+</div>
+
+<!-- 2. NAV -->
+<nav id="mnav">
+  <div class="nav-logo">VolturaGia</div>
+  <div class="nav-links">
+    <a href="#about">Chi siamo</a>
+    <a href="#servizi">Servizi</a>
+    <a href="#recensioni">Recensioni</a>
+    <a href="#faq">FAQ</a>
+    <a href="#contatti">Contatti</a>
+  </div>
+</nav>
+
+<!-- 3. HERO -->
+<section id="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-content">
+    <div class="hero-badge">Studio Commercialista</div>
+    <h1>VolturaGia</h1>
+    <div class="hero-rating">★★★★½ &nbsp;4.8/5</div>
+    <div class="hero-address">📍 Via Isonzo, 67, 40033 Casalecchio di Reno BO, Italia</div>
+    <a href="#contatti" class="hero-cta">Contattaci</a>
+  </div>
+</section>
+
+<!-- 4. ABOUT -->
+<section id="about">
+  <div class="about-in">
+    <div class="about-text">
+      <h2>Chi siamo</h2>
+      <p>VolturaGia è il riferimento per la consulenza fiscale e contabile a Casalecchio di Reno. Il nostro team supporta aziende e privati in tutti gli adempimenti fiscali con professionalità e tempestività.</p>
+      <div class="about-stats">
+        <div class="stat-box"><div class="stat-val">4.8</div><div class="stat-label">Rating Google</div></div>
+        <div class="stat-box"><div class="stat-val">45</div><div class="stat-label">Recensioni</div></div>
+        <div class="stat-box"><div class="stat-val">100%</div><div class="stat-label">Dedizione</div></div>
+        <div class="stat-box"><div class="stat-val">Casalecchio</div><div class="stat-label">Sede</div></div>
+      </div>
+    </div>
+    <div class="about-photo"><img src="https://images.unsplash.com/photo-1497366216548-37526070297c?w=1200&auto=format&fit=crop" alt="VolturaGia" loading="lazy"></div>
+  </div>
+</section>
+
+<!-- 5. SERVIZI -->
+<section id="servizi">
+  <div class="sec-hdr"><h2>I nostri servizi</h2><p>Assistenza professionale e personalizzata per ogni esigenza</p></div>
+  <div class="svc-grid"><div class="service-card"><div class="service-icon">📊</div><h3>Contabilità</h3><p>Gestione contabile completa per aziende e professionisti.</p></div><div class="service-card"><div class="service-icon">📝</div><h3>Dichiarazioni fiscali</h3><p>Compilazione e invio di tutte le dichiarazioni fiscali.</p></div><div class="service-card"><div class="service-icon">💼</div><h3>Consulenza aziendale</h3><p>Supporto strategico per la gestione e crescita della tua impresa.</p></div><div class="service-card"><div class="service-icon">📈</div><h3>Bilanci</h3><p>Redazione di bilanci annuali e situazioni contabili periodiche.</p></div><div class="service-card"><div class="service-icon">🧾</div><h3>IVA</h3><p>Gestione degli adempimenti IVA e liquidazioni periodiche.</p></div><div class="service-card"><div class="service-icon">🏦</div><h3>Pianificazione fiscale</h3><p>Ottimizzazione del carico fiscale nel rispetto della normativa.</p></div></div>
+</section>
+
+<!-- 6. GALLERY -->
+<div id="gallery"><div class="grid-photo" style="background-image:url('https://images.unsplash.com/photo-1542744173-8e7e53415bb0?w=1200&auto=format&fit=crop')"></div><div class="grid-photo" style="background-image:url('https://images.unsplash.com/photo-1521791136064-7986c2920216?w=1200&auto=format&fit=crop')"></div><div class="grid-photo" style="background-image:url('https://images.unsplash.com/photo-1600880292203-757bb62b4baf?w=1200&auto=format&fit=crop')"></div><div class="grid-photo" style="background-image:url('https://images.unsplash.com/photo-1589829545856-d10d557cf95f?w=1200&auto=format&fit=crop')"></div></div>
+
+<!-- 7. RECENSIONI -->
+<section id="recensioni">
+  <div class="rev-in">
+    <div class="sec-hdr"><h2>Cosa dicono i clienti</h2><p>Recensioni verificate su Google Maps</p></div>
+    <div class="rating-summary">
+      <div class="rating-big">
+        <div class="big-num">4.8</div>
+        <div class="big-stars">★★★★½</div>
+        <div class="big-count">45 recensioni</div>
+      </div>
+      <div class="rating-bars"><div class="dist-row"><span class="dist-lbl">5★</span><div class="dist-bar"><div class="dist-fill" style="width:86%"></div></div><span class="dist-pct">86%</span></div><div class="dist-row"><span class="dist-lbl">4★</span><div class="dist-bar"><div class="dist-fill" style="width:8%"></div></div><span class="dist-pct">8%</span></div><div class="dist-row"><span class="dist-lbl">3★</span><div class="dist-bar"><div class="dist-fill" style="width:2%"></div></div><span class="dist-pct">2%</span></div><div class="dist-row"><span class="dist-lbl">2★</span><div class="dist-bar"><div class="dist-fill" style="width:0%"></div></div><span class="dist-pct">0%</span></div><div class="dist-row"><span class="dist-lbl">1★</span><div class="dist-bar"><div class="dist-fill" style="width:2%"></div></div><span class="dist-pct">2%</span></div></div>
+      <div class="rating-tags"><span class="tag-chip">processo</span><span class="tag-chip">contratto</span><span class="tag-chip">burocratiche</span><span class="tag-chip">stress</span><span class="tag-chip">competenza</span><span class="tag-chip">attenzione</span><span class="tag-chip">cordiale</span></div>
+    </div>
+    <div class="rev-grid"><div class="review-card">
+          <div class="rev-header"><div class="review-avatar-init">C</div><div class="rev-meta"><strong>Cliente</strong><span class="rev-stars">★★★★★</span></div><div class="g-logo">G</div></div>
+          <p class="rev-text">Una delle cose che ho apprezzato di più della gestoria è stata la loro trasparenza. Ogni passo del processo era spiegato in modo dettagliato, senza sorprese finali. Ho potuto fidarmi completamente del loro operato, sapendo di avere a che fare con esperti del settore. La loro competenza si riflette non solo nei risultati, ma anche nella serenità con cui ho affrontato ogni fase della mia pratica. Un grande grazie a tutto il team!⭐️⭐️⭐️⭐️⭐️</p>
+          <span class="rev-date">un anno fa</span>
+        </div><div class="review-card">
+          <div class="rev-header"><div class="review-avatar-init">C</div><div class="rev-meta"><strong>Cliente</strong><span class="rev-stars">★★★★★</span></div><div class="g-logo">G</div></div>
+          <p class="rev-text">Sono estremamente grato per il servizio di questa gestoria. Hanno rivisto i miei contratti con un'attenzione ai dettagli che mi ha permesso di scoprire clausole nascoste e di negoziare condizioni più favorevoli.</p>
+          <span class="rev-date">un anno fa</span>
+        </div><div class="review-card">
+          <div class="rev-header"><div class="review-avatar-init">C</div><div class="rev-meta"><strong>Cliente</strong><span class="rev-stars">★★★★★</span></div><div class="g-logo">G</div></div>
+          <p class="rev-text">I migliori gestori. Sempre attenti, risolutivi e con un rapporto cordiale. Non cambierei mai questo studio per nulla al mondo!</p>
+          <span class="rev-date">un anno fa</span>
+        </div></div>
+    <a href="https://www.google.com/maps/search/?api=1&query=VolturaGia&query_place_id=ChIJgai6lwjXf0cRiCpSfPE5PaE" class="gmaps-btn" target="_blank">📍 Vedi su Google Maps</a>
+  </div>
+</section>
+
+<!-- 8. FAQ -->
+<section id="faq">
+  <div class="sec-hdr"><h2>Domande frequenti</h2></div>
+  <div class="faq-in"><div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)"><span>Quali servizi offrite alle imprese?</span><span class="faq-icon">+</span></button><div class="faq-a"><p>Offriamo contabilità ordinaria e semplificata, dichiarazioni fiscali, consulenza su apertura di attività, bilanci, gestione IVA e consulenza previdenziale per aziende e professionisti.</p></div></div><div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)"><span>Come apro la partita IVA?</span><span class="faq-icon">+</span></button><div class="faq-a"><p>L'apertura della partita IVA è gratuita e si effettua online. Vi assistiamo nella scelta del regime fiscale più conveniente (ordinario, forfettario) e nell'adempimento di tutte le formalità.</p></div></div><div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)"><span>Offrite assistenza anche da remoto?</span><span class="faq-icon">+</span></button><div class="faq-a"><p>Sì, tutti i nostri servizi sono disponibili anche da remoto. Potete inviarci i documenti digitalmente e gestire tutto online, con la stessa qualità del servizio in presenza.</p></div></div><div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)"><span>Cosa succede in caso di controllo fiscale?</span><span class="faq-icon">+</span></button><div class="faq-a"><p>In caso di verifica fiscale o avviso di accertamento vi assistiamo in ogni fase, dalla verifica fino all'eventuale ricorso. La nostra esperienza ci consente di tutelare al meglio i vostri interessi.</p></div></div><div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)"><span>Come gestite la contabilità?</span><span class="faq-icon">+</span></button><div class="faq-a"><p>Gestiamo la contabilità in modo digitale con invio mensile dei documenti. Vi forniamo report periodici sulla situazione finanziaria e fiscale della vostra attività.</p></div></div></div>
+</section>
+
+<!-- 9. MAPPA -->
+<section id="mappa"><div id="map"></div></section>
+
+<!-- 10. CONTATTI -->
+<section id="contatti">
+  <div class="cont-in">
+    <div class="cont-left">
+      <h2>Contattaci</h2>
+      
+      <div class="contact-item"><span class="ci">📍</span><div><strong>Indirizzo</strong><span>Via Isonzo, 67, 40033 Casalecchio di Reno BO, Italia</span></div></div>
+      <div class="contact-item"><span class="ci">⚖</span><div><strong>Specializzazione</strong><span>Studio Commercialista</span></div></div>
+      
+    </div>
+    <div class="cont-right">
+      <table class="hours-table"><thead><tr><th>Giorno</th><th>Orario</th></tr></thead><tbody><tr class="today-row"><td class="day-col">Mercoledì</td><td>00:00 – 24:00</td></tr><tr><td class="day-col">Giovedì</td><td>00:00 – 24:00</td></tr><tr><td class="day-col">Venerdì</td><td>00:00 – 24:00</td></tr><tr><td class="day-col">Sabato</td><td>00:00 – 24:00</td></tr><tr><td class="day-col">Domenica</td><td>00:00 – 24:00</td></tr><tr><td class="day-col">Lunedì</td><td>00:00 – 24:00</td></tr><tr><td class="day-col">Martedì</td><td>00:00 – 24:00</td></tr></tbody></table>
+    </div>
+  </div>
+</section>
+
+<!-- 11. FOOTER -->
+<footer>
+  <div class="foot-in">
+    <span>© 2026 VolturaGia. Tutti i diritti riservati.</span>
+    <span>Sito creato da <strong>Simplo</strong></span>
+    <button class="priv-link" onclick="document.getElementById('priv-modal').classList.add('open')">Privacy Policy</button>
+  </div>
+</footer>
+
+<!-- PRIVACY MODAL -->
+<div class="modal-ov" id="priv-modal" onclick="if(event.target===this)this.classList.remove('open')">
+  <div class="modal-box">
+    <button class="modal-close" onclick="document.getElementById('priv-modal').classList.remove('open')">×</button>
+    <h3>Privacy Policy</h3>
+    <p>Il presente sito web è un sito vetrina informativo. Non raccoglie dati personali tramite moduli di contatto né utilizza cookie di profilazione.</p>
+    <p>Il titolare del trattamento è VolturaGia, con sede in Via Isonzo, 67, 40033 Casalecchio di Reno BO, Italia.</p>
+    <p>L'utente ha il diritto di richiedere informazioni sui propri dati personali contattando il titolare.</p>
+    <p>Per informazioni: <a href="tel:" style="color:var(--navy)">contattare lo studio</a></p>
+  </div>
+</div>
+
+<!-- 12. STICKY -->
+
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script>
+window.addEventListener('scroll',function(){document.getElementById('mnav').classList.toggle('scrolled',scrollY>60)});
+var map=L.map('map').setView([44.4861672,11.2672207],15);
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{attribution:'© OpenStreetMap contributors'}).addTo(map);
+var ico=L.divIcon({html:'<div style="background:#1a2744;color:#c9a84c;border-radius:50%;width:44px;height:44px;display:flex;align-items:center;justify-content:center;font-size:1.3rem;box-shadow:0 3px 10px rgba(0,0,0,.4)">⚖</div>',iconSize:[44,44],iconAnchor:[22,22],className:''});
+L.marker([44.4861672,11.2672207],{icon:ico}).addTo(map).bindPopup('<strong>VolturaGia</strong><br><small>Via Isonzo, 67, 40033 Casalecchio di Reno BO, Italia</small>').openPopup();
+function toggleFaq(btn){
+  var a=btn.nextElementSibling,ic=btn.querySelector('.faq-icon'),open=a.classList.contains('open');
+  document.querySelectorAll('.faq-a.open').forEach(function(e){e.classList.remove('open')});
+  document.querySelectorAll('.faq-icon').forEach(function(e){e.textContent='+'});
+  if(!open){a.classList.add('open');ic.textContent='×';}
+}
+</script>
+</body>
+</html>
